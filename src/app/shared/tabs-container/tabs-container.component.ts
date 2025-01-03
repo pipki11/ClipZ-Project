@@ -1,0 +1,32 @@
+import { Component, contentChildren } from '@angular/core';
+import { TabComponent } from '../tab/tab.component';
+import { NgClass } from '@angular/common';
+import { AfterContentInit } from '@angular/core';
+
+@Component({
+  selector: 'app-tabs-container',
+  standalone: true,
+  imports: [NgClass],
+  templateUrl: './tabs-container.component.html',
+  styleUrl: './tabs-container.component.css',
+})
+export class TabsContainerComponent implements AfterContentInit {
+  tabs = contentChildren(TabComponent);
+
+  ngAfterContentInit() {
+    console.log(this.tabs());
+    const activeTab = this.tabs().find((tab) => tab.active());
+
+    if (!activeTab) {
+      this.selectTab(this.tabs()[0]);
+    }
+  }
+
+  selectTab(tab: TabComponent) {
+    this.tabs().forEach((tab) => tab.active.set(false));
+
+    tab.active.set(true);
+
+    return false;
+  }
+}
