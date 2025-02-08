@@ -13,4 +13,12 @@ export class LoginComponent {
     email: '',
     password: '',
   };
+
+  login() {
+    console.log(this.credentials);
+
+    // this.credentials.set(true);
+    // this.alertMsg.set('Please Wait your account is being created');
+    // this.alertColor.set('blue');
+  }
 }
