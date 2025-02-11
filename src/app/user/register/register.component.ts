@@ -2,8 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { InputComponent } from '../../shared/input/input.component';
 import { AlertComponent } from '../../shared/alert/alert.component';
-
-import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +18,7 @@ import { Auth, createUserWithEmailAndPassword } from '@angular/fire/auth';
 })
 export class RegisterComponent {
   fb = inject(FormBuilder);
-  private auth = inject(Auth);
+  auth = inject(AuthService);
 
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
@@ -52,16 +51,8 @@ export class RegisterComponent {
     this.alertColor.set('blue');
     this.inSubmission.set(true);
 
-    const { email, password } = this.form.getRawValue();
-
     try {
-      const userCred = await createUserWithEmailAndPassword(
-        this.auth,
-        email,
-        password
-      );
-
-      console.log(userCred);
+      await this.auth.createUser(this.form.getRawValue());
     } catch (e) {
       console.error(e);
       this.alertMsg.set(
